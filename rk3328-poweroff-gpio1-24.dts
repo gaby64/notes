@@ -1,3 +1,5 @@
+// Add item rk3328-poweroff-gpio1-24 to "overlays=" line in /boot/uEnv.txt
+
 /dts-v1/;
 /plugin/;
 
