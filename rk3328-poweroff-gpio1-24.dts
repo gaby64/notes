@@ -1,0 +1,21 @@
+/dts-v1/;
+/plugin/;
+
+#include <dt-bindings/gpio/gpio.h>
+
+/ {
+	compatible = "rockchip,rk3328";
+
+	fragment@0 {
+		target-path = "/";
+		__overlay__ {
+			gpio-poweroff {
+				compatible = "gpio-poweroff";
+				/* Sets poweroff pin to GPIOAO_9 as an example. Modify as needed. */
+				gpios = <&gpio1 24 GPIO_ACTIVE_HIGH>;
+				timeout-ms = <20000>;
+				force;
+			};
+		};
+	};
+};
