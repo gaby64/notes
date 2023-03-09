@@ -1,5 +1,5 @@
-// dtc -I dts -O dtb -f rk3328-poweroff-gpio1-24.dts -o /boot/dtb/rockchip/overlay/rk3328-poweroff-gpio1-24.dtbo
-// Add item rk3328-poweroff-gpio1-24 to "overlays=" line in /boot/uEnv.txt
+// dtc -I dts -O dtb -f rockchip-rk3328-poweroff-gpio1-24.dts -o /boot/dtb/rockchip/overlay/rockchip-rk3328-poweroff-gpio1-24.dtbo
+// Add item rockchip-rk3328-poweroff-gpio1-24 to "overlays=" line in /boot/uEnv.txt
 
 /dts-v1/;
 /plugin/;
