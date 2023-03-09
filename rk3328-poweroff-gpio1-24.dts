@@ -12,10 +12,10 @@
 		__overlay__ {
 			gpio-poweroff {
 				compatible = "gpio-poweroff";
-				/* Sets poweroff pin to GPIOAO_9 as an example. Modify as needed. */
 				gpios = <&gpio1 24 0>;
 				timeout-ms = <20000>;
 				force;
+				export;
 			};
 		};
 	};
