@@ -14,7 +14,7 @@
 				compatible = "gpio-poweroff";
 				gpios = <&gpio1 24 0>;
 				timeout-ms = <20000>;
-				force-mode;
+				force;
 				export;
 			};
 		};
