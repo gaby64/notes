@@ -1,0 +1,312 @@
+diff --git a/arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts b/arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts
+index 5061f149d..11667d5e2 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts
+@@ -8,7 +8,7 @@
+ #include "rk3328.dtsi"
+ 
+ / {
+-	model = "Firefly roc-rk3328-cc";
++	model = "Makerbase mkspi";
+ 	compatible = "firefly,roc-rk3328-cc", "rockchip,rk3328";
+ 
+ 	aliases {
+@@ -67,21 +67,23 @@ vcc_sd: sdmmc-regulator {
+ 
+ 	vccio_sd: sdmmcio-regulator {
+ 		compatible = "regulator-gpio";
+-		gpios = <&grf_gpio 0 GPIO_ACTIVE_HIGH>;
+-		states = <1800000 0x1>,
+-			 <3300000 0x0>;
++		gpios = <&gpio2 RK_PC4 GPIO_ACTIVE_HIGH>;
++		pinctrl-0 = <&sdio_vcc_pin>;
++		pinctrl-names = "default";		
++		states = <1800000 0x0>,
++			 <3300000 0x1>;
+ 		regulator-name = "vccio_sd";
+ 		regulator-type = "voltage";
+ 		regulator-min-microvolt = <1800000>;
+ 		regulator-max-microvolt = <3300000>;
+ 		regulator-always-on;
+-		vin-supply = <&vcc_sys>;
++		vin-supply = <&vcc_io>;
+ 	};
+ 
+ 	vcc_host1_5v: vcc_otg_5v: vcc-host1-5v-regulator {
+ 		compatible = "regulator-fixed";
+ 		enable-active-high;
+-		gpio = <&gpio1 RK_PD2 GPIO_ACTIVE_HIGH>;
++		gpio = <&gpio0 RK_PA2 GPIO_ACTIVE_HIGH>;
+ 		pinctrl-names = "default";
+ 		pinctrl-0 = <&usb20_host_drv>;
+ 		regulator-name = "vcc_host1_5v";
+@@ -123,26 +125,10 @@ user_led: led-1 {
+ 		};
+ 	};
+ 
+-	ir-receiver {
+-		compatible = "gpio-ir-receiver";
+-		gpios = <&gpio2 RK_PA2 GPIO_ACTIVE_LOW>;
+-		pinctrl-0 = <&ir_int>;
+-		pinctrl-names = "default";
+-	};
+-};
+-
+-&analog_sound {
+-	simple-audio-card,name = "TRS Jack";
+-	status = "okay";
+-};
+-
+-&codec {
+-	status = "okay";
+ };
+ 
+-
+ &analog_sound {
+-	status = "okay";
++	status = "disabled";
+ };
+ 
+ &codec {
+@@ -205,7 +191,11 @@ &gmac2io {
+ 	snps,txpbl = <0x4>;
+ 	tx_delay = <0x24>;
+ 	rx_delay = <0x18>;
+-	status = "okay";
++	status = "disabled";
++};
++
++&gmac2phy {
++ 	status = "okay";
+ };
+ 
+ &gpu {
+@@ -340,19 +330,19 @@ regulator-state-mem {
+ };
+ 
+ &i2s0 {
+-	status = "okay";
++	status = "disabled";
+ };
+ 
+ &i2s1 {
+-	status = "okay";
++	status = "disabled";
+ };
+ 
+ &i2s0 {
+-	status = "okay";
++	status = "disabled";
+ };
+ 
+ &i2s1 {
+-	status = "okay";
++	status = "disabled";
+ };
+ 
+ &io_domains {
+@@ -361,28 +351,48 @@ &io_domains {
+ 	vccio1-supply = <&vcc_io>;
+ 	vccio2-supply = <&vcc18_emmc>;
+ 	vccio3-supply = <&vccio_sd>;
+-	vccio4-supply = <&vcc_18>;
++	vccio4-supply = <&vcc_io>;
+ 	vccio5-supply = <&vcc_io>;
+ 	vccio6-supply = <&vcc_io>;
+ 	pmuio-supply = <&vcc_io>;
+ };
+ 
+ &pinctrl {
+-	ir {
+-		ir_int: ir-int {
+-			rockchip,pins = <2 RK_PA2 RK_FUNC_GPIO &pcfg_pull_none>;
+-		};
+-	};
+ 
+ 	pmic {
+ 		pmic_int_l: pmic-int-l {
+-			rockchip,pins = <1 RK_PD0 RK_FUNC_GPIO &pcfg_pull_up>;
++			rockchip,pins = <2 RK_PA6 RK_FUNC_GPIO &pcfg_pull_up>;
+ 		};
+ 	};
+ 
+ 	usb2 {
+ 		usb20_host_drv: usb20-host-drv {
+-			rockchip,pins = <1 RK_PD2 RK_FUNC_GPIO &pcfg_pull_none>;
++			rockchip,pins = <0 RK_PA2 RK_FUNC_GPIO &pcfg_pull_none>;
++		};
++	};
++
++	sd {
++		sdio_vcc_pin: sdio-vcc-pin {
++			rockchip,pins = <2 RK_PC4 RK_FUNC_GPIO &pcfg_pull_up>;
++ 		};
++ 	};
++	
++	touchscreen {
++		pinctrl_tsc2046_pendown: pinctrl_tsc2046_pendown {
++			rockchip,pins = <1 RK_PC6 RK_FUNC_GPIO &pcfg_pull_up>;
++		};
++		pinctrl_tsc2046_cs: pinctrl_tsc2046_cs {
++			rockchip,pins = <3 RK_PA7 RK_FUNC_GPIO &pcfg_pull_up>;
++		};
++	};
++	lcd {
++		pinctrl_ili9341_cs: pinctrl_ili9341_cs {
++			rockchip,pins = <3 RK_PB0 RK_FUNC_GPIO &pcfg_pull_up>;
++		};
++	};
++	spi0_cs2 {
++		pinctrl_spi0_cs2: pinctrl_spi0_cs2 {
++			rockchip,pins = <1 RK_PC2 RK_FUNC_GPIO &pcfg_pull_up>;
++		};
+ 	};
+ };
+@@ -435,6 +445,69 @@ &u2phy_otg {
+ 	status = "okay";
+ };
+ 
++&uart0 {
++	pinctrl-0 = <&uart0_xfer &uart0_cts>;
++ 	status = "okay";
++};
++
++&spi0 {
++	max-freq = <48000000>;
++	cs-gpios = <&gpio3 RK_PB0 GPIO_ACTIVE_LOW>,<&gpio3 RK_PA7 GPIO_ACTIVE_LOW>,<&gpio1 RK_PC2 GPIO_ACTIVE_LOW>;
++	pinctrl-0 = <&spi0m2_clk &spi0m2_tx &spi0m2_rx>;
++	status = "okay";
++	
++	spi_for_lcd@0 {
++		compatible ="ilitek,ili9341";
++		pinctrl-names ="default";
++		pinctrl-0 = <&pinctrl_ili9341_cs>;	
++		reg = <0>;
++		spi-max-frequency = <24000000>;
++		bgr;
++            	fps = <20>;
++            	rotate = <270>;
++            	buswidth = <8>; 
++		dc-gpios = <&gpio3 RK_PA6 GPIO_ACTIVE_HIGH>;  /* gpio3 A6 */
++            	reset-gpios = <&gpio3 RK_PA4 GPIO_ACTIVE_LOW>; /* gpio3 A4 */
++            	led-gpios = <&gpio3 RK_PA5 GPIO_ACTIVE_HIGH>;  /* gpio3 A5 */ 
++	    	status = "okay";
++	};
++	
++	spi_for_touch@1 {
++		reg = <1>;
++		compatible = "ti,tsc2046";
++		pinctrl-names ="default";
++		pinctrl-0 = <&pinctrl_tsc2046_pendown &pinctrl_tsc2046_cs>;	
++		ti,x-max = /bits/ 16 <3776>;
++		ti,x-min = /bits/ 16 <164>;
++		ti,y-min = /bits/ 16 <201>;
++		ti,y-max = /bits/ 16 <3919>;
++		ti,x-plate-ohms = /bits/ 16 <40>;
++		ti,pressure-max = /bits/ 16 <255>;
++	/*	touchscreen-fuzz-x = <16>;
++		touchscreen-fuzz-y = <16>;
++		touchscreen-fuzz-pressure = <10>;*/
++		ti,swap-xy = <1>;
++		touchscreen-inverted-y = <1>;
++		interrupt-parent = <&gpio1>;
++		interrupts = <22 0>;
++		spi-max-frequency = <2000000>;
++		pendown-gpio = <&gpio1 RK_PC6 0>;
++		vcc-supply = <&vcc_io>;		
++		wakeup-source;
++		status = "okay";
++	};
++	
++	spi_for_cs2@2 {
++		reg = <2>;
++		compatible ="rockchip,spi_test_bus1_cs2";
++		pinctrl-names ="default";
++		pinctrl-0 = <&pinctrl_spi0_cs2>;			
++		spi-max-frequency = <5000000>;
++		status = "okay";
++	};
++};
++
++
+ &uart2 {
+ 	status = "okay";
+ };
+diff --git a/drivers/power/reset/gpio-poweroff.c b/drivers/power/reset/gpio-poweroff.c
+index 1c5af2fef..09ba6f8c6 100644
+--- a/drivers/power/reset/gpio-poweroff.c
++++ b/drivers/power/reset/gpio-poweroff.c
+@@ -24,6 +24,7 @@ static struct gpio_desc *reset_gpio;
+ static u32 timeout = DEFAULT_TIMEOUT_MS;
+ static u32 active_delay = 100;
+ static u32 inactive_delay = 100;
++static void (*old_power_off)(void);
+ 
+ static void gpio_poweroff_do_poweroff(void)
+ {
+@@ -43,6 +44,9 @@ static void gpio_poweroff_do_poweroff(void)
+ 	/* give it some time */
+ 	mdelay(timeout);
+ 
++	if (old_power_off)
++		old_power_off();
++
+ 	WARN_ON(1);
+ }
+ 
+@@ -50,14 +54,29 @@ static int gpio_poweroff_probe(struct platform_device *pdev)
+ {
+ 	bool input = false;
+ 	enum gpiod_flags flags;
++	bool force = false;
++	bool export = false;
+ 
+ 	/* If a pm_power_off function has already been added, leave it alone */
+-	if (pm_power_off != NULL) {
++	force = of_property_read_bool(pdev->dev.of_node, "force");
++	if (!force && (pm_power_off != NULL)) {
+ 		dev_err(&pdev->dev,
+ 			"%s: pm_power_off function already registered\n",
+ 		       __func__);
+ 		return -EBUSY;
+ 	}
++	if (pm_power_off != NULL) {
++		if (force) {
++			dev_err(&pdev->dev,
++				 "%s: pm_power_off function replaced",
++				 __func__);
++		} else {
++			dev_err(&pdev->dev,
++				"%s: pm_power_off function already registered",
++				__func__);
++			return -EBUSY;
++		}
++	}
+ 
+ 	input = device_property_read_bool(&pdev->dev, "input");
+ 	if (input)
+@@ -74,6 +93,13 @@ static int gpio_poweroff_probe(struct platform_device *pdev)
+ 	if (IS_ERR(reset_gpio))
+ 		return PTR_ERR(reset_gpio);
+ 
++	export = of_property_read_bool(pdev->dev.of_node, "export");
++	if (export) {
++		gpiod_export(reset_gpio, false);
++		gpiod_export_link(&pdev->dev, "poweroff-gpio", reset_gpio);
++	}
++
++	old_power_off = pm_power_off;
+ 	pm_power_off = &gpio_poweroff_do_poweroff;
+ 	return 0;
+ }
+@@ -81,7 +107,9 @@ static int gpio_poweroff_probe(struct platform_device *pdev)
+ static int gpio_poweroff_remove(struct platform_device *pdev)
+ {
+ 	if (pm_power_off == &gpio_poweroff_do_poweroff)
+-		pm_power_off = NULL;
++		pm_power_off = old_power_off;
++
++	gpiod_unexport(reset_gpio);
+ 
+ 	return 0;
+ }
