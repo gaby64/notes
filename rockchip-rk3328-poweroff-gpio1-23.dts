@@ -1,0 +1,23 @@
+// dtc -I dts -O dtb -f rockchip-rk3328-poweroff-gpio1-23.dts -o /boot/dtb/rockchip/overlay/rockchip-rk3328-poweroff-gpio1-23.dtbo
+// Add item rockchip-rk3328-poweroff-gpio1-23 to "overlays=" line in /boot/uEnv.txt
+// or armibian-add-overlay rockchip-rk3328-poweroff-gpio1-23.dts
+
+/dts-v1/;
+/plugin/;
+
+/ {
+	compatible = "rockchip,rk3328";
+
+	fragment@0 {
+		target-path = "/";
+		__overlay__ {
+			gpio-poweroff {
+				compatible = "gpio-poweroff";
+				gpios = <&gpio1 23 1>;
+				timeout-ms = <20000>;
+				force;
+				export;
+			};
+		};
+	};
+};
