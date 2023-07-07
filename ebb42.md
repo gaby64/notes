@@ -44,3 +44,12 @@ dfu-util: Error during download get_status
 The EBB42 is now flashed and ready to be connected over CAN.
 
 WARNING: You should have removed the jumper on vbus after flashing was completed and the device is disconnected.
+
+sudo nano /etc/network/interfaces.d/can0
+
+allow-hotplug can0
+iface can0 can static
+        bitrate 500000
+        up ifconfig $IFACE txqueuelen 256
+
+sudo ip link set up can0
