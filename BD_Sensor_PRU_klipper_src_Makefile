@@ -1,0 +1,3 @@
+ifneq "${CONFIG_MACH_PRU}" "y"
+        src-y += BD_sensor.c  
+endif
